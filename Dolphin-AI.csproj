@@ -24,4 +24,12 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.6" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EditorConfigFiles Remove="C:\Users\NET\Desktop\Net_Real_Project\Dolphin-AI\Dolphin-AI\.editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="C:\Users\NET\Desktop\Net_Real_Project\Dolphin-AI\Dolphin-AI\.editorconfig" />
+  </ItemGroup>
+
 </Project>
