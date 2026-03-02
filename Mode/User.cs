@@ -14,8 +14,7 @@ namespace Dolphin_AI.Mode
         public string username { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "phone no is required")]
-        public string? phoneno { get; set; } = string.Empty;
-
+        public string phoneno { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "email is required")]
         [EmailAddress]

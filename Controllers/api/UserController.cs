@@ -24,49 +24,51 @@ namespace Dolphin_AI.Controllers.api
         }
 
         [HttpPost("Registration")]
-        public async Task<ActionResult<User>> UserCreate(UserDto userDto)
+        public async Task<IActionResult> UserCreate(UserDto userDto)
         {
             try
-            {       
-                var existUser = await _dbcontext.Users.ToListAsync();
-                List<string> error = new List<string>();
-
-                if (existUser.Any(o => o.email == userDto.email))
+            {
+                if (string.IsNullOrEmpty(userDto.email) ||
+                    string.IsNullOrEmpty(userDto.password))
                 {
-                    error.Add("Email already exists.");
-                }
-                if(existUser.Any(o => o.phoneno == userDto.phoneno))
-                {
-                    error.Add("Phone number is exists.");
-                }
-                if(error.Count == 0)
-                {
-                    var User = new User()
+                    return BadRequest(new
                     {
-                        username = userDto.username,
-                        email = userDto.email,
-                        phoneno = userDto.phoneno,
-                        Gender = userDto.Gender,
-                        password = PasswordCryptoHelper.Encrypt(userDto.password),
-                        city = userDto.city,
-                    };
-                    await _dbcontext.AddAsync(User);
-                    await _dbcontext.SaveChangesAsync();
-                    await _senemail.SendWelcomeEmailAsync(userDto.email,userDto.username);
-                    return Ok(new { Status = "Ok", Result = "Registration Successfull." });
-                   
+                        Status = "Fails",
+                        Result = "Required fields missing."
+                    });
                 }
-                else
+
+                if (await _dbcontext.Users.AnyAsync(o => o.email == userDto.email))
                 {
-                    return Ok(new {Status = "Fails" ,Result = error});
+                    return Ok(new { Status = "Fails", Result = "Email already exists." });
                 }
+
+                if (await _dbcontext.Users.AnyAsync(o => o.phoneno == userDto.phoneno))
+                {
+                    return Ok(new { Status = "Fails", Result = "Phone number already exists." });
+                }
+
+                var user = new User()
+                {
+                    username = userDto.username,
+                    email = userDto.email,
+                    phoneno = userDto.phoneno,
+                    Gender = userDto.Gender,
+                    password = PasswordCryptoHelper.Encrypt(userDto.password),
+                    city = userDto.city,
+                };
+
+                await _dbcontext.Users.AddAsync(user);
+                await _dbcontext.SaveChangesAsync();
+
+                return Ok(new { Status = "Ok", Result = "Registration Successful." });
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new
+                return BadRequest(new
                 {
                     Status = "Faile",
-                    Result = ex.Message   // ✅ માત્ર message return કરો
+                    Result = ex.InnerException?.Message ?? ex.Message
                 });
             }
         }
