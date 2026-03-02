@@ -19,7 +19,10 @@ builder.Services.AddHttpClient<GeminiService>();
 // Swagger Services
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<ApplicationDbcontext>(o => o.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddDbContext<ApplicationDbcontext>(
+    o => o.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 builder.Services.AddScoped<JwtTokenHelper>();
 var key = Encoding.ASCII.GetBytes(builder.Configuration["Jwt:Key"]);
 
