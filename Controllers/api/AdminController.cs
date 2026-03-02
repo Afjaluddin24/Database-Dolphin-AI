@@ -54,7 +54,7 @@ namespace Dolphin_AI.Controllers.api
                     }
                     else
                     {
-                        _jwtToken.GenerateToken(user.AdminId, user.name, user.email);
+                        _jwtToken.GenerateToken(user.AdminId,user.name, user.email);
                         return Ok(new { Status = "Ok", Result = "Login Successfully." });
                     }
                 }
