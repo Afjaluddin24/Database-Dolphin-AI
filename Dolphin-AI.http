@@ -1,0 +1,6 @@
+@Dolphin_AI_HostAddress = http://localhost:5068
+
+GET {{Dolphin_AI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
