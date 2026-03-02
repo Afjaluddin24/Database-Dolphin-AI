@@ -22,18 +22,18 @@ namespace Dolphin_AI.Controllers.api
             //cmd
         }
 
-        //[HttpPost("add")]
-        //public async Task<IActionResult> postuser(Authenticationa admin)
-        //{
-        //    var user = new Admin()
-        //    {
-        //        email = admin.email,
-        //        password = PasswordCryptoHelper.Encrypt(admin.password)
-        //    };
-        //    _dbcontext.Admins.Add(user);
-        //    await _dbcontext.SaveChangesAsync();
-        //    return Ok(admin);
-        //}
+        [HttpPost("add")]
+        public async Task<IActionResult> postuser(Authenticationa admin)
+        {
+            var user = new Admin()
+            {
+                email = admin.email,
+                password = PasswordCryptoHelper.Encrypt(admin.password)
+            };
+            _dbcontext.Admins.Add(user);
+            await _dbcontext.SaveChangesAsync();
+            return Ok(admin);
+        }
 
         [HttpPost("Authentication")]
         public async Task<ActionResult<Admin>> postAdmin(Authenticationa authenticationa)
