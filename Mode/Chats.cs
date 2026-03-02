@@ -13,7 +13,7 @@ namespace Dolphin_AI.Mode
         public User? User { get; set; }
         public string question { get; set; } = string.Empty;
         public string answer {  get; set; } = string.Empty;
-        public DateTime created_at { get; set; } = DateTime.Now;
+        public DateTime created_at { get; set; } = DateTime.UtcNow;
 
     }
 

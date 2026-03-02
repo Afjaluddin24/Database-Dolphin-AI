@@ -25,7 +25,7 @@ namespace Dolphin_AI.Mode
 
         [Required(ErrorMessage = "password is required")]
         public string password { get; set; } = string.Empty;
-        public DateTime created_at { get; set; } = DateTime.Now;
+        public DateTime created_at { get; set; } = DateTime.UtcNow;
 
         public ICollection<Chats>? chats { get; set; }
 

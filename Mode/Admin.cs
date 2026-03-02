@@ -21,7 +21,7 @@ namespace Dolphin_AI.Mode
         public string? Logo { get; set; }
         public string? Baner { get; set; }
         public string? Mapurl { get; set; }
-        public DateTime? created_at { get; set; } = DateTime.Now;
+        public DateTime? created_at { get; set; } = DateTime.UtcNow;
     }
 
     public class Authenticationa

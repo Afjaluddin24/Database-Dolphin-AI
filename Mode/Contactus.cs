@@ -19,7 +19,7 @@ namespace Dolphin_AI.Mode
 
         [Required(ErrorMessage = "message is required")]
         public string? Message { get; set; }
-        public DateTime create_date { get; set; } = DateTime.Now;
+        public DateTime create_date { get; set; } = DateTime.UtcNow;
 
     }
 
