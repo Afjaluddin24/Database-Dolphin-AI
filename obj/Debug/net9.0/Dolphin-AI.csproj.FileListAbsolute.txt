@@ -171,3 +171,5 @@ C:\Users\NET\Desktop\Net_Real_Project\Dolphin-AI\Dolphin-AI\bin\Debug\net9.0\BCr
 C:\Users\NET\Desktop\Net_Real_Project\Dolphin-AI\Dolphin-AI\bin\Debug\net9.0\BouncyCastle.Cryptography.dll
 C:\Users\NET\Desktop\Net_Real_Project\Dolphin-AI\Dolphin-AI\bin\Debug\net9.0\MailKit.dll
 C:\Users\NET\Desktop\Net_Real_Project\Dolphin-AI\Dolphin-AI\bin\Debug\net9.0\MimeKit.dll
+C:\Users\NET\Desktop\Net_Real_Project\Dolphin-AI\Dolphin-AI\bin\Debug\net9.0\Npgsql.dll
+C:\Users\NET\Desktop\Net_Real_Project\Dolphin-AI\Dolphin-AI\bin\Debug\net9.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll

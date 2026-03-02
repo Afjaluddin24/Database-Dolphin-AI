@@ -10,13 +10,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
-// ✅ Correct Email Registration
 builder.Services.AddScoped<EmailService>();
-
-// Google Gemini using reg 
 builder.Services.AddHttpClient<GeminiService>();
 
-// Swagger Services
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -24,9 +20,8 @@ builder.Services.AddDbContext<ApplicationDbcontext>(
     o => o.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<JwtTokenHelper>();
-var key = Encoding.ASCII.GetBytes(builder.Configuration["Jwt:Key"]);
 
-// JWT Token code
+var key = Encoding.ASCII.GetBytes(builder.Configuration["Jwt:Key"]);
 
 builder.Services.AddAuthentication(options =>
 {
@@ -45,11 +40,9 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(key)
     };
 });
-// ---- jwt ent
 
 var app = builder.Build();
 
-// Swagger Middleware
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -57,7 +50,13 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();   // ✅ REQUIRED
 app.UseAuthorization();
+
 app.MapControllers();
+
+// 🔥 REQUIRED FOR RENDER
+app.Urls.Add("http://0.0.0.0:8080");
 
 app.Run();
