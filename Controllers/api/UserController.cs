@@ -57,7 +57,7 @@ namespace Dolphin_AI.Controllers.api
                     password = PasswordCryptoHelper.Encrypt(userDto.password),
                     city = userDto.city,
                 };
-
+                await _senemail.SendWelcomeEmailAsync(userDto.email, userDto.username);
                 await _dbcontext.Users.AddAsync(user);
                 await _dbcontext.SaveChangesAsync();
 
