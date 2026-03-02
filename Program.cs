@@ -19,18 +19,20 @@ builder.Services.AddScoped<JwtTokenHelper>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// PostgreSQL
-builder.Services.AddDbContext<ApplicationDbcontext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+// 🔹 DATABASE SAFE LOAD
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-
-// 🔐 JWT SAFE CONFIGURATION
-var jwtKey = builder.Configuration["Jwt:Key"];
-
-if (string.IsNullOrEmpty(jwtKey))
+if (string.IsNullOrEmpty(connectionString))
 {
-    throw new Exception("JWT Key is missing in environment variables");
+    throw new Exception("Database connection string is missing.");
 }
+
+builder.Services.AddDbContext<ApplicationDbcontext>(options =>
+    options.UseNpgsql(connectionString));
+
+
+// 🔐 JWT SAFE LOAD
+var jwtKey = builder.Configuration["Jwt:Key"] ?? "TemporarySuperSecretKey123456";
 
 var key = Encoding.ASCII.GetBytes(jwtKey);
 
@@ -46,28 +48,26 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuer = true,
         ValidateAudience = true,
         ValidateIssuerSigningKey = true,
-        ValidIssuer = builder.Configuration["Jwt:Issuer"],
-        ValidAudience = builder.Configuration["Jwt:Audience"],
+        ValidIssuer = builder.Configuration["Jwt:Issuer"] ?? "Dolphin-AI",
+        ValidAudience = builder.Configuration["Jwt:Audience"] ?? "Dolphin-AI",
         IssuerSigningKey = new SymmetricSecurityKey(key)
     };
 });
 
 var app = builder.Build();
 
-
-// ✅ Enable Swagger in Production
+// Enable Swagger in Production
 app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 
-// IMPORTANT ORDER
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
 
-// 🔥 Required for Render
+// Required for Render
 app.Urls.Add("http://0.0.0.0:8080");
 
 app.Run();
