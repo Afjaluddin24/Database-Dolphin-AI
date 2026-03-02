@@ -10,18 +10,29 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
+// Services
 builder.Services.AddScoped<EmailService>();
 builder.Services.AddHttpClient<GeminiService>();
+builder.Services.AddScoped<JwtTokenHelper>();
 
+// Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<ApplicationDbcontext>(
-    o => o.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+// PostgreSQL
+builder.Services.AddDbContext<ApplicationDbcontext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddScoped<JwtTokenHelper>();
 
-var key = Encoding.ASCII.GetBytes(builder.Configuration["Jwt:Key"]);
+// 🔐 JWT SAFE CONFIGURATION
+var jwtKey = builder.Configuration["Jwt:Key"];
+
+if (string.IsNullOrEmpty(jwtKey))
+{
+    throw new Exception("JWT Key is missing in environment variables");
+}
+
+var key = Encoding.ASCII.GetBytes(jwtKey);
 
 builder.Services.AddAuthentication(options =>
 {
@@ -44,13 +55,13 @@ builder.Services.AddAuthentication(options =>
 var app = builder.Build();
 
 
-// 🔥 IMPORTANT: Enable Swagger in Production Also
+// ✅ Enable Swagger in Production
 app.UseSwagger();
 app.UseSwaggerUI();
 
-
 app.UseHttpsRedirection();
 
+// IMPORTANT ORDER
 app.UseAuthentication();
 app.UseAuthorization();
 
