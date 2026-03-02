@@ -5,6 +5,7 @@ using Dolphin_AI.Mode;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Dolphin_AI.Controllers.api
 {
@@ -23,16 +24,17 @@ namespace Dolphin_AI.Controllers.api
         }
 
         [HttpPost("add")]
-        public async Task<IActionResult> postuser(Authenticationa admin)
+        public async Task<IActionResult> postuser(AdminDto adminDto)
         {
             var user = new Admin()
             {
-                email = admin.email,
-                password = PasswordCryptoHelper.Encrypt(admin.password)
+                name = adminDto.name,
+                email = adminDto.email,
+                password = PasswordCryptoHelper.Encrypt(adminDto.password)
             };
             _dbcontext.Admins.Add(user);
             await _dbcontext.SaveChangesAsync();
-            return Ok(admin);
+            return Ok(new {Status = "Ok" , Result="Save successfully",adminDto.password });
         }
 
         [HttpPost("Authentication")]
@@ -41,6 +43,7 @@ namespace Dolphin_AI.Controllers.api
             try
             {
                 var user = await _dbcontext.Admins.FirstOrDefaultAsync(o => o.email == authenticationa.email);
+                
 
                 if (user != null)
                 {
@@ -63,7 +66,8 @@ namespace Dolphin_AI.Controllers.api
             }
             catch (Exception ex)
             {
-                return Ok(new { Status = "Fails", Result = ex.Message });
+                var data = await _dbcontext.Admins.ToListAsync();
+                return Ok(new { Status = "Fails", Result = ex.Message,data });
             }
         }
 

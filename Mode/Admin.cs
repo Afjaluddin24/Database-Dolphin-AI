@@ -30,5 +30,12 @@ namespace Dolphin_AI.Mode
         public string? password { get; set; }
     }
 
-   
+    public class AdminDto
+    {
+        public string? name { get; set; }
+        public string? email { get; set; }
+        public string? password { get; set; }
+    }
+
+
 }
