@@ -43,20 +43,20 @@ builder.Services.AddAuthentication(options =>
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+
+// 🔥 IMPORTANT: Enable Swagger in Production Also
+app.UseSwagger();
+app.UseSwaggerUI();
+
 
 app.UseHttpsRedirection();
 
-app.UseAuthentication();   // ✅ REQUIRED
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
 
-// 🔥 REQUIRED FOR RENDER
+// 🔥 Required for Render
 app.Urls.Add("http://0.0.0.0:8080");
 
 app.Run();
