@@ -10,8 +10,6 @@ namespace Dolphin_AI.Mode
 
         public int Userid { get; set; }
 
-        [Column(TypeName = "nvarchar(50)")]
-
         [Required(ErrorMessage = "name is required")]
         public string username { get; set; } = string.Empty;
 
