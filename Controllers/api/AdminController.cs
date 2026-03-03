@@ -42,7 +42,7 @@ namespace Dolphin_AI.Controllers.api
         {
             try
             {
-                var user = await _dbcontext.Admins.FirstOrDefaultAsync(o => o.email == authenticationa.email);
+                var user = await _dbcontext.Admins.FirstOrDefaultAsync(o => o.name == authenticationa.name);
                 
 
                 if (user != null)
