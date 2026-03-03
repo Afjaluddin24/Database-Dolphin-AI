@@ -99,7 +99,6 @@ namespace Dolphin_AI.Controllers.api
         }
 
         [HttpGet("Chateshistory/{userId}")]
-
         public async Task<IActionResult> GetChatsHistory(int userId)
         {
             try
