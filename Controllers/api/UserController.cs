@@ -170,26 +170,34 @@ namespace Dolphin_AI.Controllers.api
         {
             try
             {
-                var User = new User()
+                if (userDto.Userid == 0)
                 {
-                    Userid = userDto.Userid,
-                    username = userDto.username,
-                    city = userDto.city,
-                    email = userDto.email,
-                    phoneno = userDto.phoneno,
-                    Gender = userDto.Gender
-                };
-
-                if (userDto != null)
-                {
-                    _dbcontext.Users.Update(User);
-                    await _dbcontext.SaveChangesAsync();
-                    return Ok(new { Status = "Ok", Result = "Profile Update Successfully." });
+                    return Ok(new { Status = "Faile", Result = "UserId is required." });
                 }
                 else
                 {
-                    return Ok(new { Status = "Faile", Result = "User not found" });
+                    var User = new User()
+                    {
+                        Userid = userDto.Userid,
+                        username = userDto.username,
+                        city = userDto.city,
+                        email = userDto.email,
+                        phoneno = userDto.phoneno,
+                        Gender = userDto.Gender
+                    };
+
+                    if (userDto != null)
+                    {
+                        _dbcontext.Users.Update(User);
+                        await _dbcontext.SaveChangesAsync();
+                        return Ok(new { Status = "Ok", Result = "Profile Update Successfully." });
+                    }
+                    else
+                    {
+                        return Ok(new { Status = "Faile", Result = "User not found" });
+                    }
                 }
+               
 
             }
             catch (Exception ex)
