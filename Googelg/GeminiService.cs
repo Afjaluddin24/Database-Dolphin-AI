@@ -37,7 +37,7 @@ public class GeminiService
 
         var request = new HttpRequestMessage(
             HttpMethod.Post,
-            "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent"
+            "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent"
         );
 
         request.Headers.Add("x-goog-api-key", apiKey);
