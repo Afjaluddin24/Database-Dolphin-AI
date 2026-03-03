@@ -49,4 +49,15 @@ namespace Dolphin_AI.Mode
         public string? city { get; set; }
 
     }
+
+    public class UpdateDto
+    {
+        public int Userid { get; set; }
+        public string? username { get; set; }
+        public string? phoneno { get; set; }
+        public string? email { get; set; }
+        public string? Gender { get; set; }
+        public string? password { get; set; }
+        public string? city { get; set; }
+    }
 }
