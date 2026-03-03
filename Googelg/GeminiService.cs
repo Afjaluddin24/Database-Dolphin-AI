@@ -37,7 +37,7 @@ public class GeminiService
 
         var request = new HttpRequestMessage(
      HttpMethod.Post,
-     $"https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key={apiKey}"
+     $"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key={apiKey}"
  );
 
         request.Content = new StringContent(json, Encoding.UTF8, "application/json");
