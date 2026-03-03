@@ -97,5 +97,28 @@ namespace Dolphin_AI.Controllers.api
                 return Ok(new { Status = "Fails", Result = ex.Message });
             }
         }
-    }
+
+        [HttpGet("Chateshistory/{userId}")]
+
+        public async Task<IActionResult> GetChatsHistory(int userId)
+        {
+            try
+            {
+                var chatsHistory = await _dbcontext.Chats
+                    .Where(c => c.UserId == userId)
+                    .Select(c => new
+                    {
+                        c.ChatsId,
+                        c.question,
+                        c.answer
+                    })
+                    .OrderByDescending(c => c.ChatsId)
+                    .ToListAsync();
+                return Ok(new { Status = "Ok", Result = chatsHistory });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new { Status = "Fails", Result = ex.Message });
+            }
+        }
 }
