@@ -33,32 +33,29 @@ public class GeminiService
             }
         };
 
-        var jsonString = JsonSerializer.Serialize(requestBody);
+        var json = JsonSerializer.Serialize(requestBody);
 
         var request = new HttpRequestMessage(
             HttpMethod.Post,
-            "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent"
+            $"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key={apiKey}"
         );
 
-        request.Headers.Add("x-goog-api-key", apiKey);
-        request.Content = new StringContent(jsonString, Encoding.UTF8, "application/json");
+        request.Content = new StringContent(json, Encoding.UTF8, "application/json");
 
         var response = await _httpClient.SendAsync(request);
-        var result = await response.Content.ReadAsStringAsync();
+        var responseString = await response.Content.ReadAsStringAsync();
 
         if (!response.IsSuccessStatusCode)
-            return $"Gemini Error: {result}";
+            return $"Gemini Error: {responseString}";
 
-        using var doc = JsonDocument.Parse(result);
+        using var doc = JsonDocument.Parse(responseString);
 
-        if (!doc.RootElement.TryGetProperty("candidates", out var candidates))
-            return $"Unexpected Response: {result}";
-
-        var answer = candidates[0]
-            .GetProperty("content")
-            .GetProperty("parts")[0]
-            .GetProperty("text")
-            .GetString();
+        var answer = doc.RootElement
+                        .GetProperty("candidates")[0]
+                        .GetProperty("content")
+                        .GetProperty("parts")[0]
+                        .GetProperty("text")
+                        .GetString();
 
         return answer ?? "No response";
     }
