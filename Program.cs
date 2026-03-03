@@ -10,6 +10,16 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
+// ✅ CORS ADD
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        policy => policy
+            .AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader());
+});
+
 // Services
 builder.Services.AddScoped<EmailService>();
 builder.Services.AddHttpClient<GeminiService>();
@@ -19,21 +29,14 @@ builder.Services.AddScoped<JwtTokenHelper>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// 🔹 DATABASE SAFE LOAD
+// Database
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-
-if (string.IsNullOrEmpty(connectionString))
-{
-    throw new Exception("Database connection string is missing.");
-}
 
 builder.Services.AddDbContext<ApplicationDbcontext>(options =>
     options.UseNpgsql(connectionString));
 
-
-// 🔐 JWT SAFE LOAD
+// JWT
 var jwtKey = builder.Configuration["Jwt:Key"] ?? "TemporarySuperSecretKey123456";
-
 var key = Encoding.ASCII.GetBytes(jwtKey);
 
 builder.Services.AddAuthentication(options =>
@@ -56,18 +59,19 @@ builder.Services.AddAuthentication(options =>
 
 var app = builder.Build();
 
-// Enable Swagger in Production
 app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
+
+// ✅ CORS અહીં લખવું
+app.UseCors("AllowAll");
 
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
 
-// Required for Render
 app.Urls.Add("http://0.0.0.0:8080");
 
 app.Run();
