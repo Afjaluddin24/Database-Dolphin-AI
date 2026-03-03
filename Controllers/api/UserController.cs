@@ -104,6 +104,37 @@ namespace Dolphin_AI.Controllers.api
             }
         }
 
+        [HttpGet("Profil/{Id?}")]
+        public async Task<ActionResult<List<User>>> profile(int? Id)
+        {
+            try
+            {
+                var data = await _dbcontext.Users.
+                           Where(o => o.Userid == Id).
+                           Select(o => new
+                           {
+                                o.Gender,
+                                o.city,
+                                o.username,
+                                o.email,
+                                o.phoneno,
+                           }).FirstOrDefaultAsync();
+
+                if (data != null)
+                {
+                    return Ok(new { Status = "Ok", Result = data });
+                }
+                else
+                {
+                    return Ok(new { Status = "Faile", Result = "Data not found" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Ok(new { Status = "Faile", Result = ex.Message });
+            }
+        }
+
         [HttpGet("Userlist")]
         public async Task<ActionResult<List<User>>> getUsers()
         {
