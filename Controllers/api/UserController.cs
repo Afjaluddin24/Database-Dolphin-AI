@@ -146,6 +146,7 @@ namespace Dolphin_AI.Controllers.api
                     o.username,
                     o.email,
                     o.phoneno,
+                    o.city,
                     o.created_at
                 }).ToArrayAsync();
 
