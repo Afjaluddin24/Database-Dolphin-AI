@@ -39,6 +39,7 @@ namespace Dolphin_AI.Mode
 
     public class AdminUpdateDto
     {
+        public int AdminId { get; set; }
         public string? name { get; set; }
         public string? fullname { get; set; }
         public string? email { get; set; }

@@ -139,6 +139,7 @@ namespace Dolphin_AI.Controllers.api
 
                     var Admin = new Admin()
                     {
+                        AdminId = adminDto.AdminId,
                         name = adminDto.name,
                         fullname = adminDto.fullname,
                         email = adminDto.email,
