@@ -86,7 +86,8 @@ namespace Dolphin_AI.Controllers.api
                     o.Mapurl,
                     o.email,
                     o.phoneno,
-                    o.Adress
+                    o.Adress,
+                    o.fullname,
                 }).ToListAsync();
 
                 if(data.Count != 0)

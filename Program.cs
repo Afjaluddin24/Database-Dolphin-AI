@@ -58,7 +58,7 @@ builder.Services.AddAuthentication(options =>
 });
 
 var app = builder.Build();
-
+app.UseStaticFiles();
 app.UseSwagger();
 app.UseSwaggerUI();
 
