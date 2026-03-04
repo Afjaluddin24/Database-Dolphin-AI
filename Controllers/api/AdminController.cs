@@ -72,7 +72,6 @@ namespace Dolphin_AI.Controllers.api
         }
 
         [HttpGet("Profile/{Id?}")]
-
         public async Task<ActionResult<Admin>> postProfile(int? Id)
         {
             try
@@ -88,6 +87,7 @@ namespace Dolphin_AI.Controllers.api
                     o.phoneno,
                     o.Adress,
                     o.fullname,
+                    o.mess
                 }).ToListAsync();
 
                 if(data.Count != 0)
@@ -104,5 +104,28 @@ namespace Dolphin_AI.Controllers.api
                 return Ok(new { Satatus = "Ok", Result = ex.Message });
             }
         }
-    }
+
+        [HttpPost("Delete/{Id?}")]
+
+        public async Task<ActionResult<Admin>> DeleteAdmin(int? Id)
+        {
+            try
+            {
+                var data = await _dbcontext.Admins.Where(o => o.AdminId == Id).FirstOrDefaultAsync();
+                if (data != null)
+                {
+                    _dbcontext.Admins.Remove(data);
+                    await _dbcontext.SaveChangesAsync();
+                    return Ok(new { Status = "Ok", Result = "Delete Successfully" });
+                }
+                else
+                {
+                    return Ok(new { Status = "Failes", Result = "Data Not Found" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Ok(new { Satatus = "Ok", Result = ex.Message });
+            }
+        }
 }

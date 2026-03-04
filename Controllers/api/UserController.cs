@@ -80,22 +80,22 @@ namespace Dolphin_AI.Controllers.api
             {
                 var user = await _dbcontext.Users.FirstOrDefaultAsync(o => o.email == authenticationu.email);
 
-                if(user != null)
+                if (user != null)
                 {
                     var dbpass = PasswordCryptoHelper.Decrypt(user.password);
-                    if(dbpass != authenticationu.password)
+                    if (dbpass != authenticationu.password)
                     {
                         return Ok(new { Status = "Faile", Result = "Rong Password" });
                     }
                     else
                     {
                         var Gtoken = _jwttoken.GenerateToken(user.Userid, user.username, user.email);
-                        return Ok(new { Status = "Ok", Token= Gtoken, Result = "Login Successfully." });
+                        return Ok(new { Status = "Ok", Token = Gtoken, Result = "Login Successfully." });
                     }
                 }
                 else
                 {
-                    return Ok(new { Status = "Faile", Result ="User not Found"});
+                    return Ok(new { Status = "Faile", Result = "User not Found" });
                 }
             }
             catch (Exception ex)
@@ -113,11 +113,11 @@ namespace Dolphin_AI.Controllers.api
                            Where(o => o.Userid == Id).
                            Select(o => new
                            {
-                                o.Gender,
-                                o.city,
-                                o.username,
-                                o.email,
-                                o.phoneno,
+                               o.Gender,
+                               o.city,
+                               o.username,
+                               o.email,
+                               o.phoneno,
                            }).FirstOrDefaultAsync();
 
                 if (data != null)
@@ -140,7 +140,7 @@ namespace Dolphin_AI.Controllers.api
         {
             try
             {
-                var data = await  _dbcontext.Users.Select(o => new
+                var data = await _dbcontext.Users.Select(o => new
                 {
                     o.Userid,
                     o.username,
@@ -150,7 +150,7 @@ namespace Dolphin_AI.Controllers.api
                     o.created_at
                 }).ToArrayAsync();
 
-                if(data != null)
+                if (data != null)
                 {
                     return Ok(new { Status = "Ok", Result = data });
                 }
@@ -159,14 +159,13 @@ namespace Dolphin_AI.Controllers.api
                     return Ok(new { Status = "Faile", Result = "Data not found" });
                 }
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
-                return Ok(new {Status = "Faile" , Result = ex.Message});
+                return Ok(new { Status = "Faile", Result = ex.Message });
             }
         }
 
         [HttpPost("UpdateProfile")]
-
         public async Task<ActionResult<User>> poseUpdate(UpdateDto userDto)
         {
             try
@@ -198,7 +197,7 @@ namespace Dolphin_AI.Controllers.api
                         return Ok(new { Status = "Faile", Result = "User not found" });
                     }
                 }
-               
+
 
             }
             catch (Exception ex)
@@ -206,6 +205,30 @@ namespace Dolphin_AI.Controllers.api
                 return Ok(new { Status = "Faile", Result = ex.Message });
             }
 
-        }       
+        }
+
+        [HttpPost("remove{Id?}")]
+
+        public async Task<ActionResult> remove(int? Id)
+        {
+            try
+            {
+                var data = await _dbcontext.Users.FirstOrDefaultAsync(o => o.Userid == Id);
+                if (data != null)
+                {
+                    _dbcontext.Users.Remove(data);
+                    await _dbcontext.SaveChangesAsync();
+                    return Ok(new { Status = "Ok", Result = "User Remove Successfully." });
+                }
+                else
+                {
+                    return Ok(new { Status = "Faile", Result = "User not found" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Ok(new { Status = "Faile", Result = ex.Message });
+            }
+        }
     }
 }
