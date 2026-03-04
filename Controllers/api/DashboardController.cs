@@ -27,11 +27,9 @@ namespace Dolphin_AI.Controllers.api
                                     .Where(o => o.username == usename)
                                     .CountAsync();
 
-                var contactus = await _dbcontext.Contactus.ToListAsync();
-                var fullname = contactus.First().fullname;
-                var countContactus = await _dbcontext.Contactus
-                                    .Where(o => o.fullname == fullname)
-                                    .CountAsync();
+                //var contactus = await _dbcontext.Contactus.ToListAsync();
+                //var fullname = contactus.First().fullname;
+                var countContactus = await _dbcontext.Contactus.CountAsync();
 
                 return Ok(new { Status = "Ok", User=countUser, Contact=countContactus });
             }
