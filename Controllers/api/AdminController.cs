@@ -104,69 +104,62 @@ namespace Dolphin_AI.Controllers.api
             }
         }
 
-
         [HttpPost("UpdateProfiles")]
-        public async Task<ActionResult<Admin>> UpdateProfile(AdminUpdateDto adminDto)
+        public async Task<ActionResult> UpdateProfile(AdminUpdateDto adminDto)
         {
             try
             {
-                if (adminDto != null)
+                if (adminDto == null)
+                    return Ok(new { Status = "Fail", Result = "Data Not Found" });
+
+                var admin = await _dbcontext.Admins.FindAsync(adminDto.AdminId);
+
+                if (admin == null)
+                    return Ok(new { Status = "Fail", Result = "Admin Not Found" });
+
+                string logoFileName = admin.Logo;
+                string bannerFileName = admin.Baner;
+
+                // Logo Upload
+                if (!string.IsNullOrEmpty(adminDto.Logo))
                 {
-                    string logoFileName = "";
-                    string bannerFileName = "";
+                    var logoBytes = Convert.FromBase64String(adminDto.Logo);
+                    logoFileName = DateTime.Now.Ticks + ".jpg";
 
-                    if (!string.IsNullOrEmpty(adminDto.Logo))
-                    {
-                        var logoBytes = Convert.FromBase64String(adminDto.Logo);
+                    var logoPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", logoFileName);
 
-                        logoFileName = DateTime.Now.Ticks + ".jpg";
-
-                        var logoPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", logoFileName);
-
-                        await System.IO.File.WriteAllBytesAsync(logoPath, logoBytes);
-                    }
-
-                    if (!string.IsNullOrEmpty(adminDto.Baner))
-                    {
-                        var bannerBytes = Convert.FromBase64String(adminDto.Baner);
-
-                        bannerFileName = DateTime.Now.Ticks + ".jpg";
-
-                        var bannerPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", bannerFileName);
-
-                        await System.IO.File.WriteAllBytesAsync(bannerPath, bannerBytes);
-                    }
-
-                    var Admin = new Admin()
-                    {
-                        AdminId = adminDto.AdminId,
-                        name = adminDto.name,
-                        fullname = adminDto.fullname,
-                        email = adminDto.email,
-                        phoneno = adminDto.phoneno,
-                        Adress = adminDto.Adress,
-                        Logo = logoFileName,
-                        Baner = bannerFileName,
-                        Mapurl = adminDto.Mapurl
-                    };
-
-                    _dbcontext.Admins.Update(Admin);
-                    await _dbcontext.SaveChangesAsync();
-
-                    return Ok(new { Status = "Ok", Result = "Update Successfully" });
+                    await System.IO.File.WriteAllBytesAsync(logoPath, logoBytes);
                 }
-                else
+
+                // Banner Upload
+                if (!string.IsNullOrEmpty(adminDto.Baner))
                 {
-                    return Ok(new { Status = "Fails", Result = "Data Not Found" });
+                    var bannerBytes = Convert.FromBase64String(adminDto.Baner);
+                    bannerFileName = DateTime.Now.Ticks + ".jpg";
+
+                    var bannerPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", bannerFileName);
+
+                    await System.IO.File.WriteAllBytesAsync(bannerPath, bannerBytes);
                 }
+
+                admin.name = adminDto.name;
+                admin.fullname = adminDto.fullname;
+                admin.email = adminDto.email;
+                admin.phoneno = adminDto.phoneno;
+                admin.Adress = adminDto.Adress;
+                admin.Logo = logoFileName;
+                admin.Baner = bannerFileName;
+                admin.Mapurl = adminDto.Mapurl;
+
+                await _dbcontext.SaveChangesAsync();
+
+                return Ok(new { Status = "Ok", Result = "Update Successfully" });
             }
             catch (Exception ex)
             {
-                return Ok(new { Satatus = "Ok", Result = ex.Message });
+                return Ok(new { Status = "Fail", Result = ex.InnerException?.Message ?? ex.Message });
             }
         }
-
-        [HttpDelete("Delete/{Id?}")]
 
         public async Task<ActionResult<Admin>> DeleteAdmin(int? Id)
         {
