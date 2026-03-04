@@ -111,13 +111,6 @@ namespace Dolphin_AI.Controllers.api
             {
                 if (adminDto == null)
                 {
-                    return Ok(new { Status = "Fail", Result = "Data Not Found" });
-                }
-
-                var admin = await _dbcontext.Admins.FindAsync(adminDto.AdminId);
-
-                if (admin == null)
-                {
                     return Ok(new { Status = "Fail", Result = "Admin Not Found" });
                 }
 
@@ -131,9 +124,8 @@ namespace Dolphin_AI.Controllers.api
                     Adress = adminDto.Adress,
                     Mapurl = adminDto.Mapurl
                 };
-
+                _dbcontext.Admins.Update(Admin);
                 await _dbcontext.SaveChangesAsync();
-
                 return Ok(new { Status = "Ok", Result = "Update successfully" });
             }
             catch (Exception ex)
