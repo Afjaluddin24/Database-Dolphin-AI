@@ -105,38 +105,39 @@ namespace Dolphin_AI.Controllers.api
         }
 
         [HttpPost("UpdateProfiles")]
-
         public async Task<IActionResult> UpdateProfile(AdminUpdateDto adminDto)
         {
             try
             {
-                var Adminupdate = new Admin()
-                {
-                    AdminId = adminDto.AdminId,
-                    name = adminDto.name,
-                    fullname = adminDto.fullname,
-                    email = adminDto.email,
-                    phoneno = adminDto.phoneno,
-                    Adress = adminDto.Adress
-                };
-                if (adminDto != null)
-                {
-                    _dbcontext.Admins.Update(Adminupdate);
-                    await _dbcontext.SaveChangesAsync();
-                    return Ok(new { Status = "Ok", Result = "Update successfully" });
-                }
-                else
+                if (adminDto == null)
                 {
                     return Ok(new { Status = "Fail", Result = "Data Not Found" });
                 }
+
+                var admin = await _dbcontext.Admins.FindAsync(adminDto.AdminId);
+
+                if (admin == null)
+                {
+                    return Ok(new { Status = "Fail", Result = "Admin Not Found" });
+                }
+
+                admin.name = adminDto.name;
+                admin.fullname = adminDto.fullname;
+                admin.email = adminDto.email;
+                admin.phoneno = adminDto.phoneno;
+                admin.Adress = adminDto.Adress;
+
+                await _dbcontext.SaveChangesAsync();
+
+                return Ok(new { Status = "Ok", Result = "Update successfully" });
             }
             catch (Exception ex)
             {
-                return Ok(new { Satatus = "Ok", Result = ex.Message });
+                return Ok(new { Status = "Fail", Result = ex.Message });
             }
         }
 
-        
+
         public async Task<ActionResult<Admin>> DeleteAdmin(int? Id)
         {
             try
