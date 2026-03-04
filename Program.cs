@@ -8,10 +8,10 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Controllers
+// ---------------- Controllers ----------------
 builder.Services.AddControllers();
 
-// CORS
+// ---------------- CORS ----------------
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
@@ -20,29 +20,22 @@ builder.Services.AddCors(options =>
               .AllowAnyHeader());
 });
 
-// Services
+// ---------------- Services ----------------
 builder.Services.AddScoped<EmailService>();
 builder.Services.AddHttpClient<GeminiService>();
 builder.Services.AddScoped<JwtTokenHelper>();
 
-// Swagger
+// ---------------- Swagger ----------------
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Database
+// ---------------- Database ----------------
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-if (string.IsNullOrEmpty(connectionString))
-{
-    Console.WriteLine("⚠ Database connection string missing");
-}
-else
-{
-    builder.Services.AddDbContext<ApplicationDbcontext>(options =>
-        options.UseNpgsql(connectionString));
-}
+builder.Services.AddDbContext<ApplicationDbcontext>(options =>
+    options.UseNpgsql(connectionString));
 
-// JWT
+// ---------------- JWT ----------------
 var jwtKey = builder.Configuration["Jwt:Key"] ?? "TemporarySuperSecretKey123456";
 var key = Encoding.ASCII.GetBytes(jwtKey);
 
@@ -66,23 +59,30 @@ builder.Services.AddAuthentication(options =>
 
 var app = builder.Build();
 
-// Swagger
+// ---------------- Auto Database Migration ----------------
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbcontext>();
+    db.Database.Migrate();
+}
+
+// ---------------- Swagger ----------------
 app.UseSwagger();
 app.UseSwaggerUI();
 
-// Static files (important if using images)
+// ---------------- Static Files ----------------
 app.UseStaticFiles();
 
-// CORS
+// ---------------- CORS ----------------
 app.UseCors("AllowAll");
 
-// Authentication
+// ---------------- Authentication ----------------
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Controllers
+// ---------------- Controllers ----------------
 app.MapControllers();
 
-// Render port
+// ---------------- Render Port ----------------
 var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 app.Run($"http://0.0.0.0:{port}");
