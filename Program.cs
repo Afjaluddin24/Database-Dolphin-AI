@@ -32,13 +32,15 @@ builder.Services.AddSwaggerGen();
 // Database
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-if (string.IsNullOrEmpty(connectionString))
+if (string.IsNullOrWhiteSpace(connectionString))
 {
-    throw new Exception("Database connection string not found");
+    Console.WriteLine("❌ Database connection string not found");
 }
-
-builder.Services.AddDbContext<ApplicationDbcontext>(options =>
-    options.UseNpgsql(connectionString));
+else
+{
+    builder.Services.AddDbContext<ApplicationDbcontext>(options =>
+        options.UseNpgsql(connectionString));
+}
 
 // JWT
 var jwtKey = builder.Configuration["Jwt:Key"] ?? "TemporarySuperSecretKey123456";
@@ -64,12 +66,9 @@ builder.Services.AddAuthentication(options =>
 
 var app = builder.Build();
 
-// Swagger only in development
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+// Swagger
+app.UseSwagger();
+app.UseSwaggerUI();
 
 // Static files
 app.UseStaticFiles();
@@ -83,8 +82,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-// Render / Docker port
+// Render port
 var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
-app.Urls.Add($"http://0.0.0.0:{port}");
-
-app.Run();
+app.Run($"http://0.0.0.0:{port}");
