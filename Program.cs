@@ -8,16 +8,16 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Controllers
 builder.Services.AddControllers();
 
-// ✅ CORS ADD
+// CORS
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll",
-        policy => policy
-            .AllowAnyOrigin()
-            .AllowAnyMethod()
-            .AllowAnyHeader());
+    options.AddPolicy("AllowAll", policy =>
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader());
 });
 
 // Services
@@ -31,6 +31,11 @@ builder.Services.AddSwaggerGen();
 
 // Database
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+if (string.IsNullOrEmpty(connectionString))
+{
+    throw new Exception("Database connection string not found");
+}
 
 builder.Services.AddDbContext<ApplicationDbcontext>(options =>
     options.UseNpgsql(connectionString));
@@ -59,20 +64,26 @@ builder.Services.AddAuthentication(options =>
 
 var app = builder.Build();
 
-app.UseSwagger();
-app.UseSwaggerUI();
+// Swagger only in development
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
-app.UseHttpsRedirection();
-
-// ✅ CORS અહીં લખવું
-app.UseCors("AllowAll");
+// Static files
 app.UseStaticFiles();
 
+// CORS
+app.UseCors("AllowAll");
+
+// Auth
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
 
+// Render / Docker port
 var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 app.Urls.Add($"http://0.0.0.0:{port}");
 
