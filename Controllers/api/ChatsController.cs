@@ -120,4 +120,5 @@ namespace Dolphin_AI.Controllers.api
                 return Ok(new { Status = "Fails", Result = ex.Message });
             }
         }
+    }
 }
