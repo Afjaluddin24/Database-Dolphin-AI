@@ -134,7 +134,7 @@ namespace Dolphin_AI.Controllers.api
             }
         }
 
-
+        [HttpPost("Remove/{Id?}")]
         public async Task<IActionResult> DeleteAdmin(int? Id)
         {
             try
