@@ -105,68 +105,99 @@ namespace Dolphin_AI.Controllers.api
         }
 
         [HttpPost("UpdateProfiles")]
-        public async Task<IActionResult> UpdateProfile(AdminUpdateDto adminDto)
+            
+        public async Task<ActionResult<Admin>> Updateprofils(AdminUpdateDto adminDto)
         {
             try
             {
-                if (adminDto == null)
+                var Adminupdate = new Admin()
+                {
+                    AdminId = adminDto.AdminId,
+                    name = adminDto.name,
+                    fullname = adminDto.fullname,
+                    email = adminDto.email,
+                    phoneno = adminDto.phoneno,
+                    Adress = adminDto.Adress
+                };
+                if (adminDto != null)
+                {
+                    _dbcontext.Admins.Update(Adminupdate);
+                    await _dbcontext.SaveChangesAsync();
+                    return Ok(new { Status = "Ok", Result = "Update successfully" });
+                }
+                else
+                {
                     return Ok(new { Status = "Fail", Result = "Data Not Found" });
-
-                var admin = await _dbcontext.Admins.FindAsync(adminDto.AdminId);
-
-                if (admin == null)
-                    return Ok(new { Status = "Fail", Result = "Admin Not Found" });
-
-                var folder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images");
-
-                if (!Directory.Exists(folder))
-                {
-                    Directory.CreateDirectory(folder);
                 }
-
-                string logoFileName = admin.Logo;
-                string bannerFileName = admin.Baner;
-
-                if (!string.IsNullOrEmpty(adminDto.Logo))
-                {
-                    var logoBytes = Convert.FromBase64String(adminDto.Logo);
-
-                    logoFileName = DateTime.Now.Ticks + ".jpg";
-
-                    var logoPath = Path.Combine(folder, logoFileName);
-
-                    await System.IO.File.WriteAllBytesAsync(logoPath, logoBytes);
-                }
-
-                if (!string.IsNullOrEmpty(adminDto.Baner))
-                {
-                    var bannerBytes = Convert.FromBase64String(adminDto.Baner);
-
-                    bannerFileName = DateTime.Now.Ticks + ".jpg";
-
-                    var bannerPath = Path.Combine(folder, bannerFileName);
-
-                    await System.IO.File.WriteAllBytesAsync(bannerPath, bannerBytes);
-                }
-
-                admin.name = adminDto.name;
-                admin.fullname = adminDto.fullname;
-                admin.email = adminDto.email;
-                admin.phoneno = adminDto.phoneno;
-                admin.Adress = adminDto.Adress;
-                admin.Logo = logoFileName;
-                admin.Baner = bannerFileName;
-                admin.Mapurl = adminDto.Mapurl;
-
-                await _dbcontext.SaveChangesAsync();
-
-                return Ok(new { Status = "Ok", Result = "Update Successfully" });
             }
             catch (Exception ex)
             {
-                return Ok(new { Status = "Fail", Result = ex.InnerException?.Message ?? ex.Message });
+                return Ok(new { Satatus = "Ok", Result = ex.Message });
             }
         }
+
+        //public async Task<IActionResult> UpdateProfile( adminDto)
+        //{
+        //    try
+        //    {
+        //        if (adminDto == null)
+        //            return Ok(new { Status = "Fail", Result = "Data Not Found" });
+
+        //        var admin = await _dbcontext.Admins.FindAsync(adminDto.AdminId);
+
+        //        if (admin == null)
+        //            return Ok(new { Status = "Fail", Result = "Admin Not Found" });
+
+        //        var folder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images");
+
+        //        if (!Directory.Exists(folder))
+        //        {
+        //            Directory.CreateDirectory(folder);
+        //        }
+
+        //        string logoFileName = admin.Logo;
+        //        string bannerFileName = admin.Baner;
+
+        //        if (!string.IsNullOrEmpty(adminDto.Logo))
+        //        {
+        //            var logoBytes = Convert.FromBase64String(adminDto.Logo);
+
+        //            logoFileName = DateTime.Now.Ticks + ".jpg";
+
+        //            var logoPath = Path.Combine(folder, logoFileName);
+
+        //            await System.IO.File.WriteAllBytesAsync(logoPath, logoBytes);
+        //        }
+
+        //        if (!string.IsNullOrEmpty(adminDto.Baner))
+        //        {
+        //            var bannerBytes = Convert.FromBase64String(adminDto.Baner);
+
+        //            bannerFileName = DateTime.Now.Ticks + ".jpg";
+
+        //            var bannerPath = Path.Combine(folder, bannerFileName);
+
+        //            await System.IO.File.WriteAllBytesAsync(bannerPath, bannerBytes);
+        //        }
+
+        //        admin.name = adminDto.name;
+        //        admin.fullname = adminDto.fullname;
+        //        admin.email = adminDto.email;
+        //        admin.phoneno = adminDto.phoneno;
+        //        admin.Adress = adminDto.Adress;
+        //        admin.Logo = logoFileName;
+        //        admin.Baner = bannerFileName;
+        //        admin.Mapurl = adminDto.Mapurl;
+
+        //        await _dbcontext.SaveChangesAsync();
+
+        //        return Ok(new { Status = "Ok", Result = "Update Successfully" });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Ok(new { Status = "Fail", Result = ex.InnerException?.Message ?? ex.Message });
+        //    }
+        //}
         public async Task<ActionResult<Admin>> DeleteAdmin(int? Id)
         {
             try
