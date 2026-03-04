@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Dolphin-AI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+35d2dd7d638ea9153f29070ba5ea95a1f0cca093")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2b60bdfce4ef263750eb1934c8d83739467f2e5b")]
 [assembly: System.Reflection.AssemblyProductAttribute("Dolphin-AI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Dolphin-AI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
