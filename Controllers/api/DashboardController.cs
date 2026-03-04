@@ -33,7 +33,7 @@ namespace Dolphin_AI.Controllers.api
                                     .Where(o => o.fullname == fullname)
                                     .CountAsync();
 
-                return Ok(new { Status = "Ok", Result = countUser,countContactus });
+                return Ok(new { Status = "Ok", User=countUser, Contact=countContactus });
             }
             catch (Exception ex)
             {

@@ -138,7 +138,7 @@ namespace Dolphin_AI.Controllers.api
         }
 
 
-        public async Task<ActionResult<Admin>> DeleteAdmin(int? Id)
+        public async Task<IActionResult> DeleteAdmin(int? Id)
         {
             try
             {
