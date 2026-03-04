@@ -120,5 +120,28 @@ namespace Dolphin_AI.Controllers.api
                 return Ok(new { Status = "Fails", Result = ex.Message });
             }
         }
-    }
+
+        [HttpPost("DeleteChat/{userId?}")]
+        public async Task<IActionResult> DeleteChat(int? userId)
+        {
+            try
+            {
+                if (userId.HasValue)
+                {
+                    var userChats = await _dbcontext.Chats.Where(c => c.UserId == userId.Value).ToListAsync();
+                    _dbcontext.Chats.RemoveRange(userChats);
+                }
+                else
+                {
+                    var allChats = await _dbcontext.Chats.ToListAsync();
+                    _dbcontext.Chats.RemoveRange(allChats);
+                }
+                await _dbcontext.SaveChangesAsync();
+                return Ok(new { Status = "Ok", Result = "Chat(s) deleted successfully." });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new { Status = "Fails", Result = ex.Message });
+            }
+        }
 }
