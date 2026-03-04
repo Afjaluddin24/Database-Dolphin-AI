@@ -10,7 +10,7 @@ RUN dotnet restore
 COPY . ./
 
 # Publish project
-RUN dotnet publish -c Release -o out
+RUN dotnet publish -c Release -o /app/out
 
 # Runtime stage
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
@@ -18,6 +18,7 @@ WORKDIR /app
 
 COPY --from=build /app/out .
 
+# Render port binding
 ENV ASPNETCORE_URLS=http://0.0.0.0:8080
 
 EXPOSE 8080

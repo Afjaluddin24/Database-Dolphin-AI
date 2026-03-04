@@ -87,9 +87,9 @@ namespace Dolphin_AI.Controllers.api
                     o.phoneno,
                     o.Adress,
                     o.fullname
-                }).ToListAsync();
+                }).FirstOrDefaultAsync();
 
-                if (data.Count == 0)
+                if (data == null)
                 {
                     return Ok(new { Status = "Failes", Result = "Data Not Found" });
                 }
