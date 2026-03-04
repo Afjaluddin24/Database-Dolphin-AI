@@ -105,7 +105,7 @@ namespace Dolphin_AI.Controllers.api
         }
 
         [HttpPost("UpdateProfiles")]
-        public async Task<ActionResult> UpdateProfile(AdminUpdateDto adminDto)
+        public async Task<IActionResult> UpdateProfile(AdminUpdateDto adminDto)
         {
             try
             {
@@ -117,27 +117,34 @@ namespace Dolphin_AI.Controllers.api
                 if (admin == null)
                     return Ok(new { Status = "Fail", Result = "Admin Not Found" });
 
+                var folder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images");
+
+                if (!Directory.Exists(folder))
+                {
+                    Directory.CreateDirectory(folder);
+                }
+
                 string logoFileName = admin.Logo;
                 string bannerFileName = admin.Baner;
 
-                // Logo Upload
                 if (!string.IsNullOrEmpty(adminDto.Logo))
                 {
                     var logoBytes = Convert.FromBase64String(adminDto.Logo);
+
                     logoFileName = DateTime.Now.Ticks + ".jpg";
 
-                    var logoPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", logoFileName);
+                    var logoPath = Path.Combine(folder, logoFileName);
 
                     await System.IO.File.WriteAllBytesAsync(logoPath, logoBytes);
                 }
 
-                // Banner Upload
                 if (!string.IsNullOrEmpty(adminDto.Baner))
                 {
                     var bannerBytes = Convert.FromBase64String(adminDto.Baner);
+
                     bannerFileName = DateTime.Now.Ticks + ".jpg";
 
-                    var bannerPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", bannerFileName);
+                    var bannerPath = Path.Combine(folder, bannerFileName);
 
                     await System.IO.File.WriteAllBytesAsync(bannerPath, bannerBytes);
                 }
@@ -160,7 +167,6 @@ namespace Dolphin_AI.Controllers.api
                 return Ok(new { Status = "Fail", Result = ex.InnerException?.Message ?? ex.Message });
             }
         }
-
         public async Task<ActionResult<Admin>> DeleteAdmin(int? Id)
         {
             try
