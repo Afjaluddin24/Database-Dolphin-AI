@@ -19,6 +19,9 @@ public class GeminiService
         if (string.IsNullOrEmpty(apiKey))
             return "API Key is missing.";
 
+        // Current Date & Time
+        var currentDate = DateTime.Now.ToString("dddd, dd MMMM yyyy HH:mm");
+
         var requestBody = new
         {
             contents = new[]
@@ -27,7 +30,10 @@ public class GeminiService
                 {
                     parts = new[]
                     {
-                        new { text = question }
+                        new
+                        {
+                            text = $"You are Dolphin-AI assistant. Current date and time is {currentDate}. Answer the user question clearly.\nUser Question: {question}"
+                        }
                     }
                 }
             }
@@ -36,9 +42,9 @@ public class GeminiService
         var json = JsonSerializer.Serialize(requestBody);
 
         var request = new HttpRequestMessage(
-     HttpMethod.Post,
-     $"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={apiKey}"
- );
+            HttpMethod.Post,
+            $"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={apiKey}"
+        );
 
         request.Content = new StringContent(json, Encoding.UTF8, "application/json");
 
@@ -57,6 +63,6 @@ public class GeminiService
                         .GetProperty("text")
                         .GetString();
 
-        return answer ?? "No response";
+        return $"🤖 Dolphin-AI\n📅 {currentDate}\n\n{answer}";
     }
 }
