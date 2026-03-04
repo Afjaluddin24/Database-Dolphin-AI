@@ -207,7 +207,7 @@ namespace Dolphin_AI.Controllers.api
 
         }
 
-        [HttpPost("remove{Id?}")]
+        [HttpDelete("remove{Id?}")]
 
         public async Task<ActionResult> remove(int? Id)
         {

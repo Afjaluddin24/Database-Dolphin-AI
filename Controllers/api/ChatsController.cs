@@ -121,7 +121,7 @@ namespace Dolphin_AI.Controllers.api
             }
         }
 
-        [HttpPost("DeleteChat/{userId?}")]
+        [HttpDelete("DeleteChat/{userId?}")]
         public async Task<IActionResult> DeleteChat(int? userId)
         {
             try
