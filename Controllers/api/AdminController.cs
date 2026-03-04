@@ -34,7 +34,7 @@ namespace Dolphin_AI.Controllers.api
             };
             _dbcontext.Admins.Add(user);
             await _dbcontext.SaveChangesAsync();
-            return Ok(new {Status = "Ok" , Result="Save successfully",adminDto.password });
+            return Ok(new { Status = "Ok", Result = "Save successfully", adminDto.password });
         }
 
         [HttpPost("Authentication")]
@@ -43,7 +43,7 @@ namespace Dolphin_AI.Controllers.api
             try
             {
                 var user = await _dbcontext.Admins.FirstOrDefaultAsync(o => o.name == authenticationa.name);
-                
+
 
                 if (user != null)
                 {
@@ -54,7 +54,7 @@ namespace Dolphin_AI.Controllers.api
                     }
                     else
                     {
-                       var Tocken =  _jwtToken.GenerateToken(user.AdminId,user.name, user.email);
+                        var Tocken = _jwtToken.GenerateToken(user.AdminId, user.name, user.email);
                         return Ok(new { Status = "Ok", Toc = Tocken, Result = "Login Successfully." });
                     }
                 }
@@ -67,7 +67,7 @@ namespace Dolphin_AI.Controllers.api
             catch (Exception ex)
             {
                 var data = await _dbcontext.Admins.ToListAsync();
-                return Ok(new { Status = "Fails", Result = ex.Message,data });
+                return Ok(new { Status = "Fails", Result = ex.Message, data });
             }
         }
 
@@ -90,7 +90,7 @@ namespace Dolphin_AI.Controllers.api
                     o.mess
                 }).ToListAsync();
 
-                if(data.Count != 0)
+                if (data.Count != 0)
                 {
                     return Ok(new { Status = "Ok", Result = data });
                 }
@@ -128,4 +128,5 @@ namespace Dolphin_AI.Controllers.api
                 return Ok(new { Satatus = "Ok", Result = ex.Message });
             }
         }
+    }
 }
