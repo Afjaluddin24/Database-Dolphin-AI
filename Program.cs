@@ -10,7 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
-// ✅ CORS ADD
+// CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll",
@@ -58,13 +58,16 @@ builder.Services.AddAuthentication(options =>
 });
 
 var app = builder.Build();
+
+// Swagger only in development
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
 app.UseStaticFiles();
-app.UseSwagger();
-app.UseSwaggerUI();
 
-app.UseHttpsRedirection();
-
-// ✅ CORS અહીં લખવું
 app.UseCors("AllowAll");
 
 app.UseAuthentication();
@@ -72,6 +75,8 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.Urls.Add("http://0.0.0.0:8080");
+// Render / Docker port
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+app.Urls.Add($"http://0.0.0.0:{port}");
 
 app.Run();
