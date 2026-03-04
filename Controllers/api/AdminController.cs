@@ -86,17 +86,16 @@ namespace Dolphin_AI.Controllers.api
                     o.email,
                     o.phoneno,
                     o.Adress,
-                    o.fullname,
-                    o.mess
+                    o.fullname
                 }).ToListAsync();
 
-                if (data.Count != 0)
+                if (data.Count == 0)
                 {
-                    return Ok(new { Status = "Ok", Result = data });
+                    return Ok(new { Status = "Failes", Result = "Data Not Found" });
                 }
                 else
                 {
-                    return Ok(new { Status = "Failes", Result = "Data Not Found" });
+                    return Ok(new { Status = "Ok", Result = data });
                 }
             }
             catch (Exception ex)
