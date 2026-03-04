@@ -104,6 +104,67 @@ namespace Dolphin_AI.Controllers.api
             }
         }
 
+
+        [HttpPost("UpdateProfiles")]
+        public async Task<ActionResult<Admin>> UpdateProfile(AdminUpdateDto adminDto)
+        {
+            try
+            {
+                if (adminDto != null)
+                {
+                    string logoFileName = "";
+                    string bannerFileName = "";
+
+                    if (!string.IsNullOrEmpty(adminDto.Logo))
+                    {
+                        var logoBytes = Convert.FromBase64String(adminDto.Logo);
+
+                        logoFileName = DateTime.Now.Ticks + ".jpg";
+
+                        var logoPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", logoFileName);
+
+                        await System.IO.File.WriteAllBytesAsync(logoPath, logoBytes);
+                    }
+
+                    if (!string.IsNullOrEmpty(adminDto.Baner))
+                    {
+                        var bannerBytes = Convert.FromBase64String(adminDto.Baner);
+
+                        bannerFileName = DateTime.Now.Ticks + ".jpg";
+
+                        var bannerPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", bannerFileName);
+
+                        await System.IO.File.WriteAllBytesAsync(bannerPath, bannerBytes);
+                    }
+
+                    var Admin = new Admin()
+                    {
+                        name = adminDto.name,
+                        fullname = adminDto.fullname,
+                        email = adminDto.email,
+                        phoneno = adminDto.phoneno,
+                        Adress = adminDto.Adress,
+                        Logo = logoFileName,
+                        Baner = bannerFileName,
+                        Mapurl = adminDto.Mapurl
+                    };
+
+                    _dbcontext.Admins.Update(Admin);
+                    await _dbcontext.SaveChangesAsync();
+
+                    return Ok(new { Status = "Ok", Result = "Update Successfully" });
+                }
+                else
+                {
+                    return Ok(new { Status = "Fails", Result = "Data Not Found" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Ok(new { Satatus = "Ok", Result = ex.Message });
+            }
+        }
+
         [HttpDelete("Delete/{Id?}")]
 
         public async Task<ActionResult<Admin>> DeleteAdmin(int? Id)

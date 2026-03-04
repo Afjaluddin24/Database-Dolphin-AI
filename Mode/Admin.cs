@@ -37,5 +37,17 @@ namespace Dolphin_AI.Mode
         public string? password { get; set; }
     }
 
+    public class AdminUpdateDto
+    {
+        public string? name { get; set; }
+        public string? fullname { get; set; }
+        public string? email { get; set; }
+        public string? phoneno { get; set; }
+        public string? Adress { get; set; }
+        public string? Logo { get; set; }
+        public string? Baner { get; set; }
+        public string? Mapurl { get; set; }
+    }
+
 
 }

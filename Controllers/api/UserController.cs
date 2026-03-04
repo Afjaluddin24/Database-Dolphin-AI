@@ -183,7 +183,7 @@ namespace Dolphin_AI.Controllers.api
                         city = userDto.city,
                         email = userDto.email,
                         phoneno = userDto.phoneno,
-                        Gender = userDto.Gender
+                        Gender = userDto.Gender,
                     };
 
                     if (userDto != null)
