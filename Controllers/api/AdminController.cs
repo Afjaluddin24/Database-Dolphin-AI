@@ -121,11 +121,16 @@ namespace Dolphin_AI.Controllers.api
                     return Ok(new { Status = "Fail", Result = "Admin Not Found" });
                 }
 
-                admin.name = adminDto.name;
-                admin.fullname = adminDto.fullname;
-                admin.email = adminDto.email;
-                admin.phoneno = adminDto.phoneno;
-                admin.Adress = adminDto.Adress;
+                var Admin = new Admin()
+                {
+                    AdminId = adminDto.AdminId,
+                    name = adminDto.name,
+                    fullname = adminDto.fullname,
+                    email = adminDto.email,
+                    phoneno = adminDto.phoneno,
+                    Adress = adminDto.Adress,
+                    Mapurl = adminDto.Mapurl
+                };
 
                 await _dbcontext.SaveChangesAsync();
 

@@ -48,8 +48,6 @@ namespace Dolphin_AI.Mode
         public string? email { get; set; }
         public string? phoneno { get; set; }
         public string? Adress { get; set; }
-        public string? Logo { get; set; }
-        public string? Baner { get; set; }
         public string? Mapurl { get; set; }
     }
 }
