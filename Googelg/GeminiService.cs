@@ -32,7 +32,12 @@ public class GeminiService
                     {
                         new
                         {
-                            text = $"You are Dolphin-AI assistant. Answer clearly and helpfully.\nUser Question: {question}"
+                            // ✅ Pass current date to AI
+                            text = $@"You are Dolphin-AI assistant.
+Today date is {currentDate}.
+Always use this date when answering.
+
+User Question: {question}"
                         }
                     }
                 }
@@ -63,14 +68,10 @@ public class GeminiService
                         .GetProperty("text")
                         .GetString();
 
-        // ✅ Final Response (Date + AI Answer)
-        var finalResponse = $@"
-📅 Date & Time: {currentDate}
+        // ✅ Final response
+        return $@"📅 Current Date: {currentDate}
 
 🤖 Dolphin-AI:
-{answer}
-";
-
-        return finalResponse;
+{answer}";
     }
 }
