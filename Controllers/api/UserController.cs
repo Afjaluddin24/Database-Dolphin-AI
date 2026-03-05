@@ -192,39 +192,39 @@ namespace Dolphin_AI.Controllers.api
         }
 
         [HttpPost("UpdatePassword")]
-        public async Task<IActionResult> UpdatePass(Progetpass progetpass)
+        public async Task<IActionResult> UpdatePass(ChenPassword chenPassword)
         {
             try
             {
-                if (progetpass == null)
+                if (chenPassword == null)
                 {
-                    return Ok(new { Status = "Fail", Results = "Invalid data" });
+                    return Ok(new { Status = "Fail", Result = "Invalid data" });
                 }
 
                 var user = await _dbcontext.Users
-                            .FirstOrDefaultAsync(x => x.email == progetpass.email);
+                            .FirstOrDefaultAsync(x => x.email == chenPassword.email);
 
                 if (user == null)
                 {
-                    return Ok(new { Status = "Fail", Results = "Email not found" });
+                    return Ok(new { Status = "Fail", Result = "Email not found" });
                 }
 
                 // Check if new password same as old password
-                if (user.password == progetpass.password)
+                if (user.password == chenPassword.password)
                 {
-                    return Ok(new { Status = "Fail", Results = "New password cannot be same as old password" });
+                    return Ok(new { Status = "Fail", Result = "New password cannot be same as old password" });
                 }
 
                 // Update new password
-                user.password = PasswordCryptoHelper.Encrypt(progetpass.password);
+                user.password = PasswordCryptoHelper.Encrypt(chenPassword.password);
 
                 await _dbcontext.SaveChangesAsync();
 
-                return Ok(new { Status = "Ok", Results = "Password Updated Successfully" });
+                return Ok(new { Status = "Ok", Result = "Password Updated Successfully" });
             }
             catch (Exception ex)
             {
-                return Ok(new { Status = "Fail", Results = ex.Message });
+                return Ok(new { Status = "Fail", Result = ex.Message });
             }
         }
         

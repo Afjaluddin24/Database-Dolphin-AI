@@ -39,7 +39,7 @@ namespace Dolphin_AI.Mode
         public string password { get; set; }
     }
 
-    public class Progetpass
+    public class ChenPassword
     {
         public string? email { get; set;}
         public string? password { get; set; }
