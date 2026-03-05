@@ -17,11 +17,11 @@ public class GeminiService
         var apiKey = _configuration["GEMINI_API_KEY"];
 
         if (string.IsNullOrEmpty(apiKey))
-            return "❌ API Key is missing.";
+        {
+            return "API Key is missing.";
+        }
 
-        // ✅ Current Date & Time
-        string currentDate = DateTime.Now.ToString("dddd, dd MMMM yyyy hh:mm tt");
-
+        // Clean Prompt
         var requestBody = new
         {
             contents = new[]
@@ -32,10 +32,9 @@ public class GeminiService
                     {
                         new
                         {
-                            // ✅ Pass current date to AI
                             text = $@"You are Dolphin-AI assistant.
-Today date is {currentDate}.
-Always use this date when answering.
+Give short and clear answers.
+If the user asks for code, return only the code.
 
 User Question: {question}"
                         }
@@ -54,10 +53,13 @@ User Question: {question}"
         request.Content = new StringContent(json, Encoding.UTF8, "application/json");
 
         var response = await _httpClient.SendAsync(request);
+
         var responseString = await response.Content.ReadAsStringAsync();
 
         if (!response.IsSuccessStatusCode)
-            return $"❌ Gemini Error: {responseString}";
+        {
+            return $"Gemini Error: {responseString}";
+        }
 
         using var doc = JsonDocument.Parse(responseString);
 
@@ -68,10 +70,6 @@ User Question: {question}"
                         .GetProperty("text")
                         .GetString();
 
-        // ✅ Final response
-        return $@"📅 Current Date: {currentDate}
-
-🤖 Dolphin-AI:
-{answer}";
+        return answer ?? "No response from AI.";
     }
 }
