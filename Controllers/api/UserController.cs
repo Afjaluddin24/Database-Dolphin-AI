@@ -227,7 +227,7 @@ namespace Dolphin_AI.Controllers.api
                 return Ok(new { Status = "Fail", Results = ex.Message });
             }
         }
-        }
+        
 
 
         [HttpPost("remove/{Id}")]
