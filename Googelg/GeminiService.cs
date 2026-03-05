@@ -17,10 +17,7 @@ public class GeminiService
         var apiKey = _configuration["GEMINI_API_KEY"];
 
         if (string.IsNullOrEmpty(apiKey))
-            return "❌ API Key is missing.";
-
-        // Current Date & Time
-        var currentDate = DateTime.Now.ToString("dddd, dd MMMM yyyy HH:mm");
+            return "API Key is missing.";
 
         var requestBody = new
         {
@@ -52,34 +49,18 @@ public class GeminiService
         var responseString = await response.Content.ReadAsStringAsync();
 
         if (!response.IsSuccessStatusCode)
-            return $"❌ Gemini Error: {responseString}";
+            return $"Gemini Error: {responseString}";
 
         using var doc = JsonDocument.Parse(responseString);
 
         var answer = doc.RootElement
-                        .GetProperty("candidates")[0]
-                        .GetProperty("content")
-                        .GetProperty("parts")[0]
-                        .GetProperty("text")
-                        .GetString();
+            .GetProperty("candidates")[0]
+            .GetProperty("content")
+            .GetProperty("parts")[0]
+            .GetProperty("text")
+            .GetString();
 
-        // Final formatted response
-        var finalResponse = $@"
-🤖 Dolphin-AI Assistant
-👨‍💻 Developed By: Afjal Shekh
-📅 Date & Time: {currentDate}
-
-━━━━━━━━━━━━━━━━━━━━━━━
-
-❓ User Question:
-{question}
-
-💡 Dolphin-AI Response:
-{answer}
-
-━━━━━━━━━━━━━━━━━━━━━━━
-";
-
-        return finalResponse;
+        // Return ONLY AI answer
+        return answer?.Trim() ?? "No response from AI.";
     }
 }
