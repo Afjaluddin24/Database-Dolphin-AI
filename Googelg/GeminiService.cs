@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using System.Text.Json;
 
 public class GeminiService
@@ -63,21 +63,12 @@ public class GeminiService
                         .GetProperty("text")
                         .GetString();
 
-        // ✅ Final formatted response with current date
+        // ✅ Final Response (Date + AI Answer)
         var finalResponse = $@"
-🤖 Dolphin-AI Assistant
-👨‍💻 Developed By: Afjal Shekh
 📅 Date & Time: {currentDate}
 
-━━━━━━━━━━━━━━━━━━━━━━━
-
-❓ User Question:
-{question}
-
-💡 Dolphin-AI Response:
+🤖 Dolphin-AI:
 {answer}
-
-━━━━━━━━━━━━━━━━━━━━━━━
 ";
 
         return finalResponse;
