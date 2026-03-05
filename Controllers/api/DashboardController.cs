@@ -24,8 +24,8 @@ namespace Dolphin_AI.Controllers.api
 
                 //var email = users.First().email;
               //  var countUser = await _dbcontext.Users
-                                    .Where(o => o.email == email)
-                                    .CountAsync();
+                                   // .Where(o => o.email == email)
+                                  //  .CountAsync();
 
 var countUser = await _dbcontext.Users.CountAsync();       
 
