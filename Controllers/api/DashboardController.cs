@@ -22,9 +22,9 @@ namespace Dolphin_AI.Controllers.api
             {
                 var users = await _dbcontext.Users.ToListAsync();
 
-                var usename = users.First().username;
+                var email = users.First().email;
                 var countUser = await _dbcontext.Users
-                                    .Where(o => o.username == usename)
+                                    .Where(o => o.email == email)
                                     .CountAsync();
 
                 //var contactus = await _dbcontext.Contactus.ToListAsync();
