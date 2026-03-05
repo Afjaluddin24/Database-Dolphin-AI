@@ -41,6 +41,7 @@ namespace Dolphin_AI.Mode
 
     public class UserDto
     {
+        public int Userid { get; set; }
         public string? username { get; set; }
         public string? phoneno { get; set; }
         public string? email { get; set; }

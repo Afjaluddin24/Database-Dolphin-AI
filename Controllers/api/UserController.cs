@@ -166,46 +166,31 @@ namespace Dolphin_AI.Controllers.api
         }
 
         [HttpPost("UpdateProfile")]
-        public async Task<ActionResult<User>> poseUpdate(UpdateDto userDto)
+        public async Task<IActionResult> UpdateUser(UpdateDto userDto)
         {
-            try
+            if (userDto == null)
             {
-                if (userDto.Userid == 0)
-                {
-                    return Ok(new { Status = "Faile", Result = "UserId is required." });
-                }
-                else
-                {
-                    var User = new User()
-                    {
-                        Userid = userDto.Userid,
-                        username = userDto.username,
-                        city = userDto.city,
-                        email = userDto.email,
-                        phoneno = userDto.phoneno,
-                        Gender = userDto.Gender,
-                    };
-
-                    if (userDto != null)
-                    {
-                        _dbcontext.Users.Update(User);
-                        await _dbcontext.SaveChangesAsync();
-                        return Ok(new { Status = "Ok", Result = "Profile Update Successfully." });
-                    }
-                    else
-                    {
-                        return Ok(new { Status = "Faile", Result = "User not found" });
-                    }
-                }
-
-
-            }
-            catch (Exception ex)
-            {
-                return Ok(new { Status = "Faile", Result = ex.Message });
+                return Ok(new { Status = "Fail", Result = "User data not provided" });
             }
 
+            var user = await _dbcontext.Users.FindAsync(userDto.Userid);
+
+            if (user == null)
+            {
+                return Ok(new { Status = "Fail", Result = "User not found" });
+            }
+
+            user.username = userDto.username;
+            user.city = userDto.city;
+            user.email = userDto.email;
+            user.phoneno = userDto.phoneno;
+            user.Gender = userDto.Gender;
+
+            await _dbcontext.SaveChangesAsync();
+
+            return Ok(new { Status = "Ok", Result = "Profile Update Successfully." });
         }
+
 
         [HttpPost("remove/{Id}")]
 
