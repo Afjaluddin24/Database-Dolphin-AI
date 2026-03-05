@@ -20,6 +20,7 @@ namespace Dolphin_AI.Controllers.api
         {
             try
             {
+<<<<<<< HEAD
                // var users = await _dbcontext.Users.ToListAsync();
 
                 //var email = users.First().email;
@@ -28,6 +29,14 @@ namespace Dolphin_AI.Controllers.api
                                   //  .CountAsync();
 
 var countUser = await _dbcontext.Users.CountAsync();       
+=======
+                var countUser = await _dbcontext.Users.CountAsync();
+
+                //var usename = users.First().username;
+                //var countUser = await _dbcontext.Users
+                //                    .Where(o => o.username == usename)
+                //                    .CountAsync();
+>>>>>>> 1a6b0ff (update files)
 
                 //var contactus = await _dbcontext.Contactus.ToListAsync();
                 //var fullname = contactus.First().fullname;
