@@ -20,12 +20,14 @@ namespace Dolphin_AI.Controllers.api
         {
             try
             {
-                var users = await _dbcontext.Users.ToListAsync();
+               // var users = await _dbcontext.Users.ToListAsync();
 
-                var email = users.First().email;
-                var countUser = await _dbcontext.Users
+                //var email = users.First().email;
+              //  var countUser = await _dbcontext.Users
                                     .Where(o => o.email == email)
                                     .CountAsync();
+
+var countUser = await _dbcontext.Users.CountAsync();       
 
                 //var contactus = await _dbcontext.Contactus.ToListAsync();
                 //var fullname = contactus.First().fullname;
