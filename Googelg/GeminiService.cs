@@ -21,7 +21,12 @@ public class GeminiService
             return "API Key is missing.";
         }
 
-        // Clean Prompt
+        // ✅ Force India Time Zone
+        var indiaTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Asia/Kolkata");
+        var indiaTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, indiaTimeZone);
+
+        string currentTime = indiaTime.ToString("dddd, dd MMMM yyyy hh:mm tt");
+
         var requestBody = new
         {
             contents = new[]
@@ -33,6 +38,8 @@ public class GeminiService
                         new
                         {
                             text = $@"You are Dolphin-AI assistant.
+Current time in India: {currentTime}
+
 Give short and clear answers.
 If the user asks for code, return only the code.
 
@@ -53,7 +60,6 @@ User Question: {question}"
         request.Content = new StringContent(json, Encoding.UTF8, "application/json");
 
         var response = await _httpClient.SendAsync(request);
-
         var responseString = await response.Content.ReadAsStringAsync();
 
         if (!response.IsSuccessStatusCode)
