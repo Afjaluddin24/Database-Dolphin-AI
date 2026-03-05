@@ -1,5 +1,4 @@
-﻿
-using System.Text;
+﻿using System.Text;
 using System.Text.Json;
 
 public class GeminiService
@@ -20,8 +19,8 @@ public class GeminiService
         if (string.IsNullOrEmpty(apiKey))
             return "❌ API Key is missing.";
 
-        // Current Date & Time
-        var currentDate = DateTime.Now.ToString("dddd, dd MMMM yyyy HH:mm");
+        // ✅ Current Date & Time
+        string currentDate = DateTime.Now.ToString("dddd, dd MMMM yyyy hh:mm tt");
 
         var requestBody = new
         {
@@ -64,7 +63,7 @@ public class GeminiService
                         .GetProperty("text")
                         .GetString();
 
-        // Final formatted response
+        // ✅ Final formatted response with current date
         var finalResponse = $@"
 🤖 Dolphin-AI Assistant
 👨‍💻 Developed By: Afjal Shekh
