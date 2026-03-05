@@ -1,4 +1,5 @@
-using System.Text;
+
+ using System.Text;
 using System.Text.Json;
 
 public class GeminiService
@@ -21,10 +22,9 @@ public class GeminiService
             return "API Key is missing.";
         }
 
-        // ✅ Force India Time Zone
+        // India Time
         var indiaTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Asia/Kolkata");
         var indiaTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, indiaTimeZone);
-
         string currentTime = indiaTime.ToString("dddd, dd MMMM yyyy hh:mm tt");
 
         var requestBody = new
@@ -60,6 +60,15 @@ User Question: {question}"
         request.Content = new StringContent(json, Encoding.UTF8, "application/json");
 
         var response = await _httpClient.SendAsync(request);
+
+        // ✅ Handle 429 Error (Quota Exceeded)
+        if (response.StatusCode == System.Net.HttpStatusCode.TooManyRequests)
+        {
+            await Task.Delay(60000); // wait 1 minute
+
+            return "⚠️ Daily AI limit reached (20 requests). Please wait 1 minute or try again tomorrow.";
+        }
+
         var responseString = await response.Content.ReadAsStringAsync();
 
         if (!response.IsSuccessStatusCode)
